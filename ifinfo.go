@@ -48,6 +48,10 @@ func makeInfo(r *http.Request) *info {
 	ipAddr := maybeGet(r.Header, "X-Real-Ip")
 
 	if ipAddr == "" {
+		ipAddr = inf.Forwarded
+	}
+
+	if ipAddr == "" {
 		ipAddr, _, _ = net.SplitHostPort(r.RemoteAddr)
 	}
 
