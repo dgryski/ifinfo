@@ -99,14 +99,8 @@ func main() {
 
 	port := ":8080"
 
-	for _, e := range []string{
-		"VCAP_APP_PORT", // cloudfoundry / appfog
-		"PORT",          // heroku
-	} {
-		if p := os.Getenv(e); p != "" {
-			port = ":" + p
-			break
-		}
+	if p := os.Getenv("PORT"); p != "" {
+		port = ":" + p
 	}
 
 	log.Fatal(http.ListenAndServe(port, nil))
