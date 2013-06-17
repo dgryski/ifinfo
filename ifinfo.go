@@ -45,23 +45,21 @@ func makeInfo(r *http.Request) *info {
 	inf.UserAgent = maybeGet(r.Header, "User-Agent")
 	inf.Via = maybeGet(r.Header, "Via")
 
-	ipAddr := maybeGet(r.Header, "X-Real-Ip")
+	inf.IpAddr = maybeGet(r.Header, "X-Real-Ip")
 
-	if ipAddr == "" {
-		ipAddr = inf.Forwarded
+	if inf.IpAddr == "" {
+		inf.IpAddr = inf.Forwarded
 	}
 
-	if ipAddr == "" {
-		ipAddr, _, _ = net.SplitHostPort(r.RemoteAddr)
+	if inf.IpAddr == "" {
+		inf.IpAddr, _, _ = net.SplitHostPort(r.RemoteAddr)
 	}
 
-	inf.IpAddr = ipAddr
-
-	hosts, err := net.LookupAddr(ipAddr)
+	hosts, err := net.LookupAddr(inf.IpAddr)
 	if err == nil {
 		inf.RemoteHost = hosts[0]
 	} else {
-		inf.RemoteHost = ipAddr
+		inf.RemoteHost = inf.IpAddr
 	}
 
 	return inf
