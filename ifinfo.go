@@ -13,7 +13,6 @@ import (
 )
 
 type info struct {
-	Charset    string `xml:"charset" json:"charset"`
 	Connection string `xml:"connection" json:"connection"`
 	Encoding   string `xml:"encoding" json:"encoding"`
 	Forwarded  string `xml:"forwarded" json:"forwarded"`
@@ -39,7 +38,6 @@ func makeInfo(r *http.Request) *info {
 
 	inf := &info{}
 
-	inf.Charset = maybeGet(r.Header, "Accept-Charset")
 	inf.Connection = maybeGet(r.Header, "Connection")
 	inf.Encoding = maybeGet(r.Header, "Accept-Encoding")
 	inf.Forwarded = maybeGet(r.Header, "X-Forwarded-For")
