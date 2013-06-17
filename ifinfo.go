@@ -19,7 +19,6 @@ type info struct {
 	IpAddr     string `xml:"ip_addr" json:"ip_addr"`
 	Lang       string `xml:"lang" json:"lang"`
 	Mime       string `xml:"mime" json:"mime"`
-	Port       string `xml:"port" json:"port"`
 	RemoteHost string `xml:"remote_host" json:"remote_host"`
 	UserAgent  string `xml:"user_agent" json:"user_agent"`
 	Via        string `xml:"via" json:"via"`
@@ -46,9 +45,14 @@ func makeInfo(r *http.Request) *info {
 	inf.UserAgent = maybeGet(r.Header, "User-Agent")
 	inf.Via = maybeGet(r.Header, "Via")
 
-	ipAddr, port, _ := net.SplitHostPort(r.RemoteAddr)
+	ipAddr := maybeGet(r.Header, "X-Real-Ip")
+
+	if ipAddr == "" {
+		ipAddr, _, _ = net.SplitHostPort(r.RemoteAddr)
+	}
+
 	inf.IpAddr = ipAddr
-	inf.Port = port
+
 	hosts, err := net.LookupAddr(ipAddr)
 	if err == nil {
 		inf.RemoteHost = hosts[0]
