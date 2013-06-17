@@ -54,6 +54,8 @@ func makeInfo(r *http.Request) *info {
 	hosts, err := net.LookupAddr(ipAddr)
 	if err == nil {
 		inf.RemoteHost = hosts[0]
+	} else {
+		inf.RemoteHost = ipAddr
 	}
 
 	return inf
