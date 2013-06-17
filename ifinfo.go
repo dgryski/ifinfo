@@ -42,10 +42,11 @@ func makeInfo(r *http.Request) *info {
 	inf.Charset = maybeGet(r.Header, "Accept-Charset")
 	inf.Connection = maybeGet(r.Header, "Connection")
 	inf.Encoding = maybeGet(r.Header, "Accept-Encoding")
+	inf.Forwarded = maybeGet(r.Header, "X-Forwarded-For")
 	inf.Lang = maybeGet(r.Header, "Accept-Language")
 	inf.Mime = maybeGet(r.Header, "Accept")
 	inf.UserAgent = maybeGet(r.Header, "User-Agent")
-	inf.Via = maybeGet(r.Header, "X-Forwarded-For")
+	inf.Via = maybeGet(r.Header, "Via")
 
 	ipAddr, port, _ := net.SplitHostPort(r.RemoteAddr)
 	inf.IpAddr = ipAddr
