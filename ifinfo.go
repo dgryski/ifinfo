@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type info struct {
@@ -39,7 +40,9 @@ func makeInfo(r *http.Request) *info {
 
 	inf.Connection = maybeGet(r.Header, "Connection")
 	inf.Encoding = maybeGet(r.Header, "Accept-Encoding")
-	inf.Forwarded = maybeGet(r.Header, "X-Forwarded-For")
+	if fwds, ok := r.Header["X-Forwarded-For"]; ok {
+		inf.Forwarded = strings.Join(fwds, ",")
+	}
 	inf.Lang = maybeGet(r.Header, "Accept-Language")
 	inf.Mime = maybeGet(r.Header, "Accept")
 	inf.UserAgent = maybeGet(r.Header, "User-Agent")
@@ -48,7 +51,7 @@ func makeInfo(r *http.Request) *info {
 	inf.IpAddr = maybeGet(r.Header, "X-Real-Ip")
 
 	if inf.IpAddr == "" {
-		inf.IpAddr = inf.Forwarded
+		inf.IpAddr = maybeGet(r.Header, "X-Forwarded-For")
 	}
 
 	if inf.IpAddr == "" {
