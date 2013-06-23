@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"text/template"
 )
 
 type info struct {
@@ -100,6 +101,39 @@ func main() {
 		w.Write([]byte("\n"))
 	})
 
+	http.HandleFunc("/forwarded", func(w http.ResponseWriter, r *http.Request) {
+		m := makeInfo(r)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(m.Forwarded))
+		w.Write([]byte("\n"))
+	})
+
+	http.HandleFunc("/via", func(w http.ResponseWriter, r *http.Request) {
+		m := makeInfo(r)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(m.Via))
+		w.Write([]byte("\n"))
+	})
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
+
+		m := makeInfo(r)
+		w.Header().Set("Cache-Control", "no-cache")
+		if !strings.Contains(m.UserAgent, "Mozilla") {
+			w.Header().Set("Content-Type", "text/plain")
+			w.Write([]byte(m.IpAddr))
+			w.Write([]byte("\n"))
+			return
+		}
+
+		rootTemplate.Execute(w, m)
+
+	})
+
 	port := ":8080"
 
 	if p := os.Getenv("PORT"); p != "" {
@@ -108,3 +142,77 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(port, nil))
 }
+
+var rootTemplate = template.Must(template.New("root").Parse(rootTemplateHTML))
+
+const rootTemplateHTML = `
+<html>
+  <head>
+  <style type="text/css">
+
+    @import url(http://fonts.googleapis.com/css?family=Droid+Serif);
+    @import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
+
+    body {
+       background : lightgrey ;
+       margin-top : 100px ;
+       font-family : 'Droid Serif' ;
+    }
+
+    div#content
+    {
+       margin : auto ;
+       width : 75%;
+    }
+
+    table {
+       background : white ;
+       border-style : solid ;
+       border-collapse : collapse ;
+       border-color : grey ;
+    }
+
+    td.value {
+       font-family : 'Droid Sans Mono' ;
+       font-size : 12px
+    }
+
+    td.key {
+       font-size : 15px ;
+    }
+
+</style>
+
+  <body>
+    <div id="content">
+    <p>Your connection info</p>
+        <table border=1>
+        <tr><td class="key">Ip Address</td><td style="font-size : 30px" class="value">{{.IpAddr}}</td></tr>
+            <tr><td class="key">Connection</td><td class="value">{{.Connection}}</td></tr>
+            <tr><td class="key">Encoding</td><td class="value">{{.Encoding}}</td></tr>
+            <tr><td class="key">Forwarded</td><td class="value">{{.Forwarded}}</td></tr>
+            <tr><td class="key">Language</td><td class="value">{{.Lang}}</td></tr>
+            <tr><td class="key">MIME Type</td><td class="value">{{.Mime}}</td></tr>
+            <tr><td class="key">Remote Host</td><td class="value">{{.RemoteHost}}</td></tr>
+            <tr><td class="key">User Agent</td><td class="value">{{.UserAgent}}</td></tr>
+            <tr><td class="key">Via</td><td class="value">{{.Via}}</td></tr>
+        </table>
+
+        <p>API
+
+        <ul>
+        <li><a href="/all.json">/all.json</a>
+        <li><a href="/all.xml">/all.xml</a>
+        <li>command line:
+            <ul>
+            <li>curl http://HOSTNAME ⇒ {{ .IpAddr }}
+            <li>curl http://HOSTNAME/ip ⇒ {{ .IpAddr }}
+            <li>curl http://HOSTNAME/host ⇒ {{ .RemoteHost }}
+            <li>curl http://HOSTNAME/forwarded ⇒ {{ .Forwarded }}
+            <li>curl http://HOSTNAME/via ⇒ {{ .Via }}
+            </ul>
+        </ul>
+    </div>
+  </body>
+</html>
+`
