@@ -6,12 +6,12 @@ package main
 import (
 	"encoding/json"
 	"encoding/xml"
+	"html/template"
 	"log"
 	"net"
 	"net/http"
 	"os"
 	"strings"
-	"html/template"
 )
 
 type info struct {
