@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"text/template"
+	"html/template"
 )
 
 type info struct {
