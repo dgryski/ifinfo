@@ -150,8 +150,8 @@ const rootTemplateHTML = `
   <head>
   <style type="text/css">
 
-    @import url(http://fonts.googleapis.com/css?family=Droid+Serif);
-    @import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
+    @import url(//fonts.googleapis.com/css?family=Droid+Serif);
+    @import url(//fonts.googleapis.com/css?family=Droid+Sans+Mono);
 
     body {
        background : lightgrey ;
