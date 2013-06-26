@@ -87,10 +87,45 @@ func main() {
 		w.Write([]byte("\n"))
 	})
 
+	http.HandleFunc("/connection", func(w http.ResponseWriter, r *http.Request) {
+		m := makeInfo(r)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(m.Connection))
+		w.Write([]byte("\n"))
+	})
+
+	http.HandleFunc("/encoding", func(w http.ResponseWriter, r *http.Request) {
+		m := makeInfo(r)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(m.Encoding))
+		w.Write([]byte("\n"))
+	})
+
+	http.HandleFunc("/forwarded", func(w http.ResponseWriter, r *http.Request) {
+		m := makeInfo(r)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(m.Forwarded))
+		w.Write([]byte("\n"))
+	})
+
 	http.HandleFunc("/ip", func(w http.ResponseWriter, r *http.Request) {
 		m := makeInfo(r)
 		w.Header().Set("Content-Type", "text/plain")
 		w.Write([]byte(m.IpAddr))
+		w.Write([]byte("\n"))
+	})
+
+	http.HandleFunc("/lang", func(w http.ResponseWriter, r *http.Request) {
+		m := makeInfo(r)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(m.Lang))
+		w.Write([]byte("\n"))
+	})
+
+	http.HandleFunc("/mime", func(w http.ResponseWriter, r *http.Request) {
+		m := makeInfo(r)
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte(m.Mime))
 		w.Write([]byte("\n"))
 	})
 
@@ -101,10 +136,10 @@ func main() {
 		w.Write([]byte("\n"))
 	})
 
-	http.HandleFunc("/forwarded", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/ua", func(w http.ResponseWriter, r *http.Request) {
 		m := makeInfo(r)
 		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte(m.Forwarded))
+		w.Write([]byte(m.UserAgent))
 		w.Write([]byte("\n"))
 	})
 
