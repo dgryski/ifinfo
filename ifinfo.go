@@ -233,6 +233,8 @@ const rootTemplateHTML = `
             <tr><td class="key">Via</td><td class="value">{{.Via}}</td></tr>
         </table>
 
+        <div style="font-size: 12px">
+
         <p>API
 
         <ul>
@@ -243,10 +245,16 @@ const rootTemplateHTML = `
             <li>curl http://HOSTNAME ⇒ {{ .IpAddr }}
             <li>curl http://HOSTNAME/ip ⇒ {{ .IpAddr }}
             <li>curl http://HOSTNAME/host ⇒ {{ .RemoteHost }}
+            <li>curl http://HOSTNAME/connection ⇒ {{ .Connection }}
+            <li>curl http://HOSTNAME/encoding ⇒ {{ .Encoding }}
             <li>curl http://HOSTNAME/forwarded ⇒ {{ .Forwarded }}
+            <li>curl http://HOSTNAME/lang ⇒ {{ .Lang }}
+            <li>curl http://HOSTNAME/mime ⇒ {{ .Mime }}
+            <li>curl http://HOSTNAME/ua ⇒ {{ .UserAgent }}
             <li>curl http://HOSTNAME/via ⇒ {{ .Via }}
             </ul>
         </ul>
+        </div>
     </div>
   </body>
 </html>
