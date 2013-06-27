@@ -19,7 +19,7 @@ type info struct {
 	Encoding   string `xml:"encoding" json:"encoding"`
 	Forwarded  string `xml:"forwarded" json:"forwarded"`
 	IpAddr     string `xml:"ip_addr" json:"ip_addr"`
-	Host       string // not serialized
+	Host       string `xml:"-" json:"-"`
 	Lang       string `xml:"lang" json:"lang"`
 	Mime       string `xml:"mime" json:"mime"`
 	RemoteHost string `xml:"remote_host" json:"remote_host"`
