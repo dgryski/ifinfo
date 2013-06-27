@@ -19,6 +19,7 @@ type info struct {
 	Encoding   string `xml:"encoding" json:"encoding"`
 	Forwarded  string `xml:"forwarded" json:"forwarded"`
 	IpAddr     string `xml:"ip_addr" json:"ip_addr"`
+	Host       string // not serialized
 	Lang       string `xml:"lang" json:"lang"`
 	Mime       string `xml:"mime" json:"mime"`
 	RemoteHost string `xml:"remote_host" json:"remote_host"`
@@ -44,6 +45,7 @@ func makeInfo(r *http.Request) *info {
 	if fwds, ok := r.Header["X-Forwarded-For"]; ok {
 		inf.Forwarded = strings.Join(fwds, ",")
 	}
+	inf.Host = r.Host
 	inf.Lang = maybeGet(r.Header, "Accept-Language")
 	inf.Mime = maybeGet(r.Header, "Accept")
 	inf.UserAgent = maybeGet(r.Header, "User-Agent")
@@ -242,16 +244,16 @@ const rootTemplateHTML = `
         <li><a href="/all.xml">/all.xml</a>
         <li>command line:
             <ul>
-            <li>curl http://HOSTNAME ⇒ {{ .IpAddr }}
-            <li>curl http://HOSTNAME/ip ⇒ {{ .IpAddr }}
-            <li>curl http://HOSTNAME/host ⇒ {{ .RemoteHost }}
-            <li>curl http://HOSTNAME/connection ⇒ {{ .Connection }}
-            <li>curl http://HOSTNAME/encoding ⇒ {{ .Encoding }}
-            <li>curl http://HOSTNAME/forwarded ⇒ {{ .Forwarded }}
-            <li>curl http://HOSTNAME/lang ⇒ {{ .Lang }}
-            <li>curl http://HOSTNAME/mime ⇒ {{ .Mime }}
-            <li>curl http://HOSTNAME/ua ⇒ {{ .UserAgent }}
-            <li>curl http://HOSTNAME/via ⇒ {{ .Via }}
+            <li>curl http://{{.Host}} ⇒ {{ .IpAddr }}
+            <li>curl http://{{.Host}}/ip ⇒ {{ .IpAddr }}
+            <li>curl http://{{.Host}}/host ⇒ {{ .RemoteHost }}
+            <li>curl http://{{.Host}}/connection ⇒ {{ .Connection }}
+            <li>curl http://{{.Host}}/encoding ⇒ {{ .Encoding }}
+            <li>curl http://{{.Host}}/forwarded ⇒ {{ .Forwarded }}
+            <li>curl http://{{.Host}}/lang ⇒ {{ .Lang }}
+            <li>curl http://{{.Host}}/mime ⇒ {{ .Mime }}
+            <li>curl http://{{.Host}}/ua ⇒ {{ .UserAgent }}
+            <li>curl http://{{.Host}}/via ⇒ {{ .Via }}
             </ul>
         </ul>
         </div>
