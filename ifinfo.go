@@ -183,6 +183,7 @@ var rootTemplate = template.Must(template.New("root").Parse(rootTemplateHTML))
 const rootTemplateHTML = `
 <html>
   <head>
+  <title>ifinfo</title>
   <style type="text/css">
 
     @import url(//fonts.googleapis.com/css?family=Droid+Serif);
