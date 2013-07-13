@@ -1,8 +1,6 @@
 // ifinfo: a clone of the fabulous ifconfig.me
 package main
 
-// TODO: html if useragent =~ /[Mm]ozilla/ (== browser)
-
 import (
 	"encoding/json"
 	"encoding/xml"
